@@ -1,0 +1,1296 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operação Código de Silêncio | Profª Bárbara</title>
+
+<style>
+:root{
+ --bg:#10131d;
+ --panel:#1b2231;
+ --panel2:#252e40;
+ --red:#ed4355;
+ --gold:#efc46b;
+ --green:#55d6a0;
+ --white:#f5f6fa;
+ --muted:#aeb8ca;
+ --border:#394459;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:radial-gradient(ellipse at top,#28334b,#10131d 65%);
+ color:var(--white);
+ font-family:Arial,sans-serif;
+ min-height:100vh;
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+header{
+ position:sticky;top:0;z-index:10;
+ background:#10131dee;
+ backdrop-filter:blur(12px);
+ border-bottom:1px solid var(--border);
+ padding:15px 5%;
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px;
+}
+.brand{font-weight:900;letter-spacing:2px;color:var(--red)}
+.teacher{font-size:12px;color:var(--gold)}
+.container{width:min(1050px,92%);margin:30px auto}
+.screen{display:none;animation:appear .4s ease}
+.screen.active{display:block}
+@keyframes appear{
+ from{opacity:0;transform:translateY(12px)}
+ to{opacity:1;transform:translateY(0)}
+}
+h1{font-size:clamp(34px,6vw,64px);line-height:1.05;margin:15px 0}
+h2{font-size:clamp(23px,4vw,32px)}
+h3{line-height:1.45}
+p{line-height:1.7;color:#d1d7e2}
+.hero{
+ padding:clamp(24px,5vw,55px);
+ border:1px solid #48536b;
+ border-radius:22px;
+ background:linear-gradient(135deg,#28344b,#171d2b);
+ box-shadow:0 20px 65px #0008;
+ position:relative;overflow:hidden;
+}
+.hero:after{
+ content:"◈";
+ position:absolute;right:20px;top:20px;
+ font-size:130px;color:#ed435511;
+ pointer-events:none;
+}
+.hero>*{position:relative;z-index:1}
+.red{color:var(--red)}
+.goldText{color:var(--gold)}
+.eyebrow{
+ color:var(--gold);font-size:11px;
+ letter-spacing:3px;font-weight:bold;
+}
+.panel{
+ background:var(--panel);
+ border:1px solid var(--border);
+ border-radius:16px;padding:22px;margin:18px 0;
+}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+ gap:12px;margin:18px 0;
+}
+.stat{
+ background:var(--panel2);padding:17px;
+ border-radius:12px;
+}
+.stat strong{
+ display:block;font-size:28px;color:var(--gold);
+ margin-bottom:5px;
+}
+.muted{color:var(--muted);font-size:13px}
+.btn{
+ border:0;border-radius:9px;padding:13px 19px;
+ margin:5px 3px;font-weight:bold;
+ background:var(--red);color:white;
+ transition:.2s;
+}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.13)}
+.btn.secondary{background:#39465e}
+.btn.gold{background:var(--gold);color:#181818}
+.btn.green{background:#20865f}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+input,textarea{
+ width:100%;padding:13px;margin:8px 0 15px;
+ background:#111827;color:white;
+ border:1px solid #4b5870;border-radius:8px;
+}
+textarea{min-height:110px;resize:vertical}
+label{font-size:14px;font-weight:bold}
+.character{
+ display:flex;gap:15px;align-items:center;
+ background:#252e40;padding:15px;
+ border-radius:12px;margin:15px 0;
+}
+.avatar{
+ width:65px;height:65px;flex-shrink:0;
+ display:grid;place-items:center;
+ background:#111827;border-radius:50%;
+ font-size:38px;
+}
+.tag{font-size:10px;color:var(--gold);letter-spacing:2px}
+.character p{font-size:14px;margin:5px 0}
+.clue{
+ background:#292c38;border-left:4px solid var(--gold);
+ border-radius:5px;padding:16px;margin:15px 0;
+ line-height:1.6;
+}
+.option{
+ display:block;width:100%;text-align:left;
+ padding:16px;margin:10px 0;
+ border:1px solid #46536b;border-radius:10px;
+ background:#252e40;color:white;line-height:1.5;
+}
+.option:hover{border-color:var(--gold);background:#323c50}
+.option.correct{border-color:var(--green);background:#174637}
+.option.wrong{border-color:var(--red);background:#50232d}
+.progress{
+ height:9px;background:#333e52;
+ border-radius:20px;overflow:hidden;margin:12px 0;
+}
+.progress div{
+ height:100%;width:0;background:var(--red);
+ transition:width .4s;
+}
+.scoreboard{
+ display:flex;gap:8px;justify-content:space-between;
+ flex-wrap:wrap;
+}
+.pill{
+ background:#303b50;border-radius:30px;
+ padding:9px 13px;font-size:12px;
+}
+.feedback{
+ padding:15px;border-radius:10px;
+ margin:15px 0;line-height:1.6;
+}
+.good{background:#174637;border:1px solid var(--green)}
+.bad{background:#50232d;border:1px solid var(--red)}
+.hidden{display:none!important}
+.legal{
+ background:#222c3d;border:1px solid #45536c;
+ padding:17px;border-radius:10px;margin:14px 0;
+}
+.legal h3{color:var(--gold);margin-top:0}
+.legal a{color:#9fcaff}
+.podcast{
+ background:#151c2a;border:1px solid var(--border);
+ padding:20px;border-radius:12px;margin:15px 0;
+}
+#flash{
+ display:none;position:fixed;inset:0;
+ background:#a00c25ed;z-index:100;
+ align-items:center;justify-content:center;
+ text-align:center;padding:20px;
+}
+#flash.show{display:flex;animation:appear .2s}
+#flash h2{
+ font-size:clamp(30px,7vw,65px);
+ color:white;text-shadow:0 0 20px black;
+}
+.shake{animation:shake .5s}
+@keyframes shake{
+ 0%,100%{transform:translate(0)}
+ 15%{transform:translate(-9px,4px)}
+ 30%{transform:translate(8px,-5px)}
+ 45%{transform:translate(-7px,3px)}
+ 60%{transform:translate(7px,3px)}
+ 75%{transform:translate(-4px,-3px)}
+}
+footer{
+ text-align:center;padding:30px;
+ color:#8793a9;font-size:12px;
+}
+hr{border:0;border-top:1px solid var(--border);margin:25px 0}
+@media(max-width:600px){
+ header{padding:13px}
+ .teacher{font-size:10px}
+ .container{margin:18px auto}
+ .panel{padding:16px}
+}
+@media print{
+ header,footer,.no-print,button{display:none!important}
+ body{background:white;color:black}
+ .screen{display:none!important}
+ #podcast.active,#certificate.active{display:block!important}
+ .panel,.podcast,.legal{background:white;color:black;border:1px solid #aaa}
+ p,label,h1,h2,h3{color:black}
+ input,textarea{color:black;border:1px solid #aaa;background:white}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="brand">◈ OPERAÇÃO C.S.</div>
+ <div class="teacher">MESTRE DO JOGO: PROFª BÁRBARA</div>
+</header>
+
+<main class="container">
+
+<!-- CAPA -->
+<section class="screen active" id="home">
+ <div class="hero">
+  <div class="eyebrow">ARQUIVO CONFIDENCIAL // 001-A</div>
+  <h1>OPERAÇÃO<br><span class="red">CÓDIGO DE SILÊNCIO</span></h1>
+
+  <p>
+   Uma empresa. Seis personagens. Documentos apagados.
+   Decisões que podem mudar vidas.
+  </p>
+
+  <p>
+   Uma denúncia anônima acaba de chegar à imprensa.
+   Uma grande organização está prestes a receber um prêmio
+   nacional de responsabilidade social, mas existem documentos
+   que indicam graves irregularidades.
+  </p>
+
+  <div class="clue">
+   <b>⚠ ALERTA DO SISTEMA</b><br>
+   O presidente desapareceu. Uma funcionária foi silenciada.
+   Um relatório foi apagado. E alguém está tentando impedir
+   esta investigação.
+  </div>
+
+  <h3>Identifique sua equipe investigadora:</h3>
+  <input id="team" placeholder="Nome da equipe">
+
+  <button class="btn" onclick="startGame()">
+   INICIAR INVESTIGAÇÃO →
+  </button>
+
+  <p class="muted">
+   Atenção: algumas decisões não possuem respostas simples.
+   Justifiquem suas escolhas.
+  </p>
+ </div>
+
+ <div class="grid">
+  <div class="stat"><strong>05</strong>Fases secretas</div>
+  <div class="stat"><strong>300</strong>Pontos possíveis</div>
+  <div class="stat"><strong>15</strong>Desafios</div>
+  <div class="stat"><strong>01</strong>Podcast final</div>
+ </div>
+</section>
+
+<!-- JOGO -->
+<section class="screen" id="game">
+
+ <div class="scoreboard">
+  <span class="pill" id="teamLabel">EQUIPE</span>
+  <span class="pill">⭐ PONTOS: <b id="score">0</b></span>
+  <span class="pill" id="phaseLabel">FASE 1/5</span>
+ </div>
+
+ <div class="progress">
+  <div id="progressBar"></div>
+ </div>
+
+ <div class="panel">
+  <div class="eyebrow" id="phaseEyebrow"></div>
+  <h2 id="phaseTitle"></h2>
+  <p id="phaseDescription"></p>
+
+  <div id="characterArea"></div>
+
+  <div id="clueArea" class="clue hidden"></div>
+
+  <div id="questionArea"></div>
+
+  <div id="feedback" class="feedback hidden"></div>
+
+  <div id="actions"></div>
+ </div>
+
+ <div class="panel">
+  <div class="eyebrow">PAINEL DA INVESTIGAÇÃO</div>
+  <p>Fase atual: <b id="currentPhase">1</b> de 5</p>
+  <p>Desafio atual: <b id="currentQuestion">1</b> de 3</p>
+  <p>Dicas utilizadas: <b id="hintCount">0</b></p>
+  <p class="muted">
+   A mestre do jogo pode acompanhar as decisões e conduzir
+   as discussões coletivas.
+  </p>
+ </div>
+</section>
+
+<!-- RESULTADO -->
+<section class="screen" id="result">
+ <div class="hero">
+  <div class="eyebrow">INVESTIGAÇÃO CONCLUÍDA</div>
+  <h1>O QUE ACONTECEU<br><span class="red">NA EMPRESA?</span></h1>
+  <h2 id="finalScore" class="goldText"></h2>
+  <p id="finalMessage"></p>
+  <div class="clue" id="ending"></div>
+  <button class="btn gold" onclick="showScreen('dossier')">
+   ABRIR DOSSIÊ JURÍDICO 🔓
+  </button>
+ </div>
+</section>
+
+<!-- DOSSIÊ JURÍDICO -->
+<section class="screen" id="dossier">
+ <div class="eyebrow">DOCUMENTOS LIBERADOS</div>
+ <h1>DOSSIÊ <span class="goldText">JURÍDICO</span></h1>
+
+ <p>
+  Investigadores, agora vocês têm acesso às referências legais
+  e éticas relacionadas ao caso. Consultem os documentos
+  para fundamentar o podcast.
+ </p>
+
+ <div class="legal">
+  <h3>01. Lei Brasileira de Inclusão — Lei nº 13.146/2015</h3>
+  <p>
+   Institui o Estatuto da Pessoa com Deficiência.
+   Garante igualdade de oportunidades, acessibilidade,
+   participação social e direitos no trabalho.
+  </p>
+  <p>
+   O artigo 34 assegura o direito ao trabalho em ambiente
+   acessível e inclusivo, em igualdade de oportunidades,
+   vedando discriminação nas etapas da vida profissional.
+  </p>
+  <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm" target="_blank">
+   Consultar legislação integral ↗
+  </a>
+ </div>
+
+ <div class="legal">
+  <h3>02. Lei nº 10.098/2000 — Lei da Acessibilidade</h3>
+  <p>
+   Estabelece normas gerais e critérios básicos para
+   promover acessibilidade e eliminar barreiras arquitetônicas,
+   urbanísticas, de transporte e comunicação.
+  </p>
+  <p>
+   A acessibilidade deve proporcionar autonomia e segurança.
+   Não se limita à instalação de rampas.
+  </p>
+  <a href="https://www.planalto.gov.br/ccivil_03/leis/l10098.htm" target="_blank">
+   Consultar legislação integral ↗
+  </a>
+ </div>
+
+ <div class="legal">
+  <h3>03. Decreto nº 5.296/2004</h3>
+  <p>
+   Regulamenta as Leis nº 10.048/2000 e nº 10.098/2000,
+   detalhando critérios de acessibilidade e atendimento prioritário.
+  </p>
+  <a href="https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/decreto/d5296.htm" target="_blank">
+   Consultar decreto ↗
+  </a>
+ </div>
+
+ <div class="legal">
+  <h3>04. Lei nº 10.048/2000</h3>
+  <p>
+   Dispõe sobre atendimento prioritário às pessoas
+   legalmente contempladas, incluindo pessoas com deficiência,
+   pessoas autistas, pessoas idosas e outros grupos previstos
+   na legislação vigente.
+  </p>
+  <a href="https://www.planalto.gov.br/ccivil_03/leis/l10048.htm" target="_blank">
+   Consultar legislação ↗
+  </a>
+ </div>
+
+ <div class="legal">
+  <h3>05. Lei nº 8.213/1991 — Artigo 93</h3>
+  <p>
+   Estabelece reserva de vagas para pessoas com deficiência
+   ou beneficiários reabilitados pela Previdência Social
+   em empresas com 100 ou mais empregados, observados
+   os percentuais previstos na legislação.
+  </p>
+  <a href="https://www.planalto.gov.br/ccivil_03/leis/l8213cons.htm" target="_blank">
+   Consultar legislação ↗
+  </a>
+ </div>
+
+ <div class="legal">
+  <h3>06. Código de Ética e Disciplina dos Profissionais de Administração</h3>
+  <p>
+   A Resolução Normativa CFA nº 671/2025 aprovou o código
+   vigente e revogou a RN CFA nº 640/2024.
+  </p>
+  <p>
+   O documento estabelece princípios, deveres, responsabilidades
+   e infrações disciplinares relacionados ao exercício profissional.
+   Entre os temas estão honestidade, zelo, responsabilidade,
+   sigilo profissional, independência técnica e condutas
+   incompatíveis com a ética, incluindo assédio e discriminação.
+  </p>
+  <a href="https://documentos.cfa.org.br/?a=show&c=documento&id=1038" target="_blank">
+   Consultar Código de Ética ↗
+  </a>
+  <p class="muted">
+   Consulte o texto integral para identificar os artigos
+   aplicáveis a cada situação investigada.
+  </p>
+ </div>
+
+ <div class="legal">
+  <h3>07. Lei nº 4.769/1965</h3>
+  <p>
+   Dispõe sobre o exercício da profissão de Técnico de Administração,
+   regulamentando a profissão e suas atividades.
+  </p>
+  <a href="https://www.planalto.gov.br/ccivil_03/leis/l4769.htm" target="_blank">
+   Consultar legislação ↗
+  </a>
+ </div>
+
+ <div class="legal">
+  <h3>08. Lei nº 10.257/2001 — Estatuto da Cidade</h3>
+  <p>
+   Regulamenta os artigos 182 e 183 da Constituição Federal
+   e estabelece diretrizes gerais da política urbana.
+  </p>
+  <p>
+   É uma referência importante para discutir função social
+   da propriedade, direito à cidade, moradia, valorização
+   imobiliária e impactos das transformações urbanas.
+  </p>
+  <a href="https://www.planalto.gov.br/ccivil_03/leis/leis_2001/l10257.htm" target="_blank">
+   Consultar legislação ↗
+  </a>
+ </div>
+
+ <div class="legal">
+  <h3>09. ABNT NBR 9050</h3>
+  <p>
+   Norma técnica que estabelece critérios e parâmetros
+   de acessibilidade a edificações, mobiliário, espaços
+   e equipamentos urbanos.
+  </p>
+  <p>
+   Não é uma lei, mas uma referência técnica fundamental
+   para projetos, adaptações e avaliação de ambientes.
+  </p>
+  <a href="https://www.abntcatalogo.com.br/" target="_blank">
+   Consultar catálogo ABNT ↗
+  </a>
+ </div>
+
+ <div class="legal">
+  <h3>10. Dilema do bonde — reflexão filosófica</h3>
+  <p>
+   Experimento mental sobre escolhas morais, consequências,
+   deveres e responsabilidade. Não existe uma legislação
+   que determine uma resposta única ao dilema.
+  </p>
+  <p>
+   O objetivo é desenvolver argumentação, pensamento crítico
+   e capacidade de analisar diferentes perspectivas éticas.
+  </p>
+ </div>
+
+ <hr>
+
+ <h2>⚖️ Perguntas para discussão coletiva</h2>
+
+ <ol>
+  <li>Uma empresa pode ser lucrativa e ainda assim ser socialmente irresponsável?</li>
+  <li>É possível justificar uma decisão antiética alegando que ela preservou empregos?</li>
+  <li>A acessibilidade deve ser tratada como custo ou como direito?</li>
+  <li>Quem se beneficia da gentrificação e quem pode ser prejudicado?</li>
+  <li>O administrador deve obedecer a uma ordem da diretoria quando ela contraria princípios éticos?</li>
+  <li>Qual é a diferença entre cumprir a lei e agir eticamente?</li>
+  <li>Como uma empresa pode reparar os danos provocados por suas decisões?</li>
+  <li>Quais são as responsabilidades do RH na promoção de ambientes inclusivos?</li>
+ </ol>
+
+ <button class="btn" onclick="showScreen('podcast')">
+  AVANÇAR PARA O PODCAST →
+ </button>
+</section>
+
+<!-- PODCAST -->
+<section class="screen" id="podcast">
+
+ <div class="eyebrow">MISSÃO FINAL // PRODUÇÃO DE CONTEÚDO</div>
+
+ <h1>O PODCAST <span class="goldText">DA VERDADE</span></h1>
+
+ <p>
+  A investigação não termina aqui. Agora vocês serão jornalistas
+  investigativos e precisam apresentar o caso ao público.
+ </p>
+
+ <div class="panel">
+  <h2>🎙️ Roteiro obrigatório de produção</h2>
+
+  <p>
+   Preencham coletivamente. O roteiro será a base da gravação
+   que será entregue para avaliação.
+  </p>
+
+  <label>1. Equipe</label>
+  <input id="podTeam" readonly>
+
+  <label>2. Título do episódio</label>
+  <input id="podTitle" placeholder="Crie um título instigante">
+
+  <label>3. Apresentadores e participantes</label>
+  <textarea id="podMembers" placeholder="Nome e função de cada participante"></textarea>
+
+  <label>4. Abertura — apresentação do caso</label>
+  <textarea id="podIntro" placeholder="Apresentem a empresa fictícia, o mistério e o objetivo do episódio."></textarea>
+
+  <label>5. Desenvolvimento — relato das evidências</label>
+  <textarea id="podEvidence" placeholder="Apresentem as pistas, depoimentos, documentos e contradições encontrados."></textarea>
+
+  <label>6. Debate — análise dos conceitos</label>
+  <textarea id="podDebate" placeholder="Discutam o dilema do bonde, inclusão, acessibilidade, gentrificação e ética administrativa."></textarea>
+
+  <label>7. Fundamentação legal</label>
+  <textarea id="podLaws" placeholder="Citem as leis, os artigos e o Código de Ética utilizados para analisar o caso."></textarea>
+
+  <label>8. Veredito — conclusão da equipe</label>
+  <textarea id="podVerdict" placeholder="A empresa merece o prêmio? Quais providências deveriam ser adotadas?"></textarea>
+
+  <label>9. Encerramento</label>
+  <textarea id="podEnd" placeholder="Criem uma frase de impacto para finalizar o episódio."></textarea>
+
+  <button class="btn green" onclick="downloadScript()">
+   ⬇ BAIXAR ROTEIRO EM TXT
+  </button>
+
+  <button class="btn secondary" onclick="printScript()">
+   IMPRIMIR / SALVAR EM PDF
+  </button>
+ </div>
+
+ <div class="panel">
+  <h2>🎧 Orientações para gravação</h2>
+  <ul>
+   <li>Duração recomendada: 5 a 8 minutos.</li>
+   <li>Todos os integrantes devem participar.</li>
+   <li>Apresentar o caso e contextualizar a investigação.</li>
+   <li>Utilizar evidências e argumentos.</li>
+   <li>Relacionar a discussão à legislação.</li>
+   <li>Apresentar um veredito fundamentado.</li>
+   <li>Finalizar com uma reflexão sobre ética e responsabilidade social.</li>
+  </ul>
+ </div>
+
+ <div class="panel">
+  <h2>📊 Critérios de avaliação</h2>
+
+  <div class="grid">
+   <div class="stat"><strong>2,0</strong>Roteiro e organização</div>
+   <div class="stat"><strong>2,0</strong>Argumentação e reflexão ética</div>
+   <div class="stat"><strong>2,0</strong>Fundamentação legal</div>
+   <div class="stat"><strong>2,0</strong>Participação e equipe</div>
+   <div class="stat"><strong>2,0</strong>Criatividade e comunicação</div>
+  </div>
+
+  <h3 class="goldText">NOTA TOTAL: 10,0</h3>
+
+  <button class="btn gold" onclick="showScreen('certificate')">
+   FINALIZAR MISSÃO 🏆
+  </button>
+ </div>
+</section>
+
+<!-- ENCERRAMENTO -->
+<section class="screen" id="certificate">
+ <div class="hero">
+  <div class="eyebrow">ARQUIVO ENCERRADO</div>
+
+  <h1>CASO<br><span class="red">INVESTIGADO.</span></h1>
+
+  <h2 id="certificateTeam"></h2>
+
+  <p>
+   Vocês descobriram que a gestão de uma organização não se resume
+   a resultados financeiros. Decisões administrativas afetam
+   pessoas, comunidades, direitos e a sociedade.
+  </p>
+
+  <div class="clue">
+   "O verdadeiro caráter de uma organização aparece quando
+   ela precisa escolher entre o que é conveniente e o que é correto."
+  </div>
+
+  <h2 id="certificateScore" class="goldText"></h2>
+
+  <p>
+   Investigação conduzida sob supervisão da
+   <b>mestre do jogo: Profª Bárbara.</b>
+  </p>
+
+  <button class="btn secondary" onclick="printScript()">
+   IMPRIMIR RESULTADO
+  </button>
+
+  <button class="btn" onclick="location.reload()">
+   REINICIAR INVESTIGAÇÃO
+  </button>
+ </div>
+</section>
+
+</main>
+
+<div id="flash">
+ <div>
+  <div style="font-size:55px">☠</div>
+  <h2 id="flashTitle">VOCÊS NÃO ESTÃO SOZINHOS.</h2>
+  <p id="flashText">Um arquivo acaba de ser alterado...</p>
+  <button class="btn gold" onclick="closeFlash()">
+   CONTINUAR INVESTIGAÇÃO
+  </button>
+ </div>
+</div>
+
+<footer>
+ OPERAÇÃO CÓDIGO DE SILÊNCIO<br>
+ MATERIAL DIDÁTICO • TÉCNICO EM ADMINISTRAÇÃO MODULAR<br>
+ MESTRE DO JOGO: PROFª BÁRBARA
+</footer>
+
+<script>
+
+/* ==================================
+   BANCO DE DADOS DOS DESAFIOS
+================================== */
+
+const phases = [
+
+{
+ title:"O DILEMA DO BONDE",
+ desc:"Um acidente foi provocado por uma falha de gestão. Um sistema automatizado está prestes a atingir cinco trabalhadores. Um desvio pode salvar cinco pessoas, mas colocará uma pessoa em risco. O diretor exige uma decisão imediata.",
+ character:"👨‍💼",
+ name:"MARCOS — DIRETOR EXECUTIVO",
+ role:"DEPOIMENTO CONFIDENCIAL",
+ speech:"Eu não quero saber de filosofia. Quero uma decisão. Se vocês errarem, a empresa perderá milhões. E alguém precisará assumir a culpa.",
+ clue:"ARQUIVO 01: O sistema de segurança estava desatualizado. A diretoria recebeu três alertas e decidiu adiar a manutenção.",
+ questions:[
+  {
+   q:"O dilema do bonde é utilizado principalmente para discutir:",
+   options:[
+    "A) Como aumentar a produtividade industrial.",
+    "B) Conflitos entre consequências, deveres e escolhas morais.",
+    "C) Como reduzir o quadro de funcionários.",
+    "D) Como calcular o lucro de uma empresa."
+   ],
+   answer:1,
+   explain:"O dilema permite discutir diferentes perspectivas éticas, como consequências, deveres e responsabilidade moral."
+  },
+  {
+   q:"A diretoria sabia dos riscos e adiou a manutenção. Qual é o principal problema ético?",
+   options:[
+    "A) Apenas a perda financeira.",
+    "B) A falta de publicidade da empresa.",
+    "C) A negligência diante de riscos conhecidos e a prioridade dada à economia sobre a segurança.",
+    "D) A ausência de reuniões."
+   ],
+   answer:2,
+   explain:"A gestão tem responsabilidade sobre prevenção de riscos, segurança e consequências de suas decisões."
+  },
+  {
+   q:"DESAFIO ABERTO: Se vocês fossem responsáveis pela decisão, como agiriam? É possível salvar vidas sem tratar uma delas como descartável? Justifiquem.",
+   open:true,
+   explain:"Não existe uma resposta única. A equipe deve considerar prevenção, protocolos de emergência, direitos, proporcionalidade e responsabilidade."
+  }
+ ]
+},
+
+{
+ title:"A EMPRESA INACESSÍVEL",
+ desc:"Uma candidata aprovada em um processo seletivo foi impedida de iniciar o trabalho. A empresa afirma que não possui estrutura adequada. Um funcionário revela que o sistema de seleção também não é acessível.",
+ character:"♿",
+ name:"JÚLIA — CANDIDATA E DENUNCIANTE",
+ role:"DEPOIMENTO REGISTRADO",
+ speech:"Eu passei no processo seletivo. Depois descobriram que eu precisava de adaptações. Disseram que seria complicado demais me contratar. Nem perguntaram do que eu precisava.",
+ clue:"ARQUIVO 02: O relatório de RH contém a frase: 'Não contratar pessoas que demandem adaptações neste momento'.",
+ questions:[
+  {
+   q:"Qual legislação brasileira garante o direito ao trabalho em ambiente acessível e inclusivo?",
+   options:[
+    "A) Lei nº 13.146/2015.",
+    "B) Lei nº 10.257/2001.",
+    "C) Lei nº 8.078/1990.",
+    "D) Lei nº 4.769/1965."
+   ],
+   answer:0,
+   explain:"A Lei Brasileira de Inclusão, especialmente o artigo 34, assegura o trabalho em igualdade de oportunidades."
+  },
+  {
+   q:"Acessibilidade em uma organização significa:",
+   options:[
+    "A) Instalar somente uma rampa na entrada.",
+    "B) Garantir condições de acesso, autonomia, segurança e participação, considerando barreiras físicas, comunicacionais, tecnológicas e atitudinais.",
+    "C) Contratar uma pessoa com deficiência apenas para cumprir tabela.",
+    "D) Oferecer benefícios apenas a alguns funcionários."
+   ],
+   answer:1,
+   explain:"Acessibilidade envolve muito mais que arquitetura: inclui comunicação, informação, tecnologia e atitudes."
+  },
+  {
+   q:"Qual é o papel da gestão de pessoas diante dessa situação?",
+   options:[
+    "A) Encerrar a candidatura imediatamente.",
+    "B) Transferir a responsabilidade à candidata.",
+    "C) Identificar barreiras, dialogar sobre adaptações razoáveis e garantir igualdade de oportunidades.",
+    "D) Excluir a vaga do processo seletivo."
+   ],
+   answer:2,
+   explain:"O processo deve ser inclusivo e buscar condições efetivas para o exercício profissional."
+  }
+ ]
+},
+
+{
+ title:"A CIDADE QUE EXPULSOU SEUS MORADORES",
+ desc:"A empresa comprou terrenos em uma região tradicional e anunciou um grande empreendimento. Os imóveis valorizaram rapidamente, os aluguéis aumentaram e pequenos comerciantes começaram a deixar o bairro.",
+ character:"🏘️",
+ name:"DONA LÚCIA — MORADORA",
+ role:"TESTEMUNHO DA COMUNIDADE",
+ speech:"Minha família mora aqui há quarenta anos. Depois que chegaram as grandes empresas, tudo ficou mais caro. A padaria fechou. Meus vizinhos foram embora. Chamam isso de progresso. Para nós, foi expulsão.",
+ clue:"ARQUIVO 03: A consultoria da empresa recomendou valorizar o bairro sem considerar o impacto sobre os moradores de baixa renda.",
+ questions:[
+  {
+   q:"O fenômeno descrito é conhecido como:",
+   options:[
+    "A) Terceirização.",
+    "B) Gentrificação.",
+    "C) Downsizing.",
+    "D) Endomarketing."
+   ],
+   answer:1,
+   explain:"A gentrificação pode ocorrer quando a valorização e transformação de uma região elevam custos e contribuem para o deslocamento de moradores tradicionais."
+  },
+  {
+   q:"Qual legislação é uma referência para discutir a função social da cidade e da propriedade urbana?",
+   options:[
+    "A) Lei nº 10.257/2001 — Estatuto da Cidade.",
+    "B) Lei nº 13.146/2015, exclusivamente.",
+    "C) Lei nº 10.048/2000.",
+    "D) Lei nº 4.769/1965."
+   ],
+   answer:0,
+   explain:"O Estatuto da Cidade estabelece diretrizes para a política urbana, considerando o bem coletivo e o direito à cidade."
+  },
+  {
+   q:"Uma empresa pode alegar que não tem responsabilidade pelos impactos sociais de seus investimentos?",
+   options:[
+    "A) Sim, porque somente o lucro importa.",
+    "B) Sim, porque o impacto urbano não interessa à gestão.",
+    "C) Não deve ignorar os impactos: precisa avaliar consequências, dialogar com a comunidade e atuar com responsabilidade social, dentro de suas competências e obrigações.",
+    "D) Sim, desde que tenha publicidade."
+   ],
+   answer:2,
+   explain:"A responsabilidade social exige considerar os efeitos das decisões empresariais sobre a sociedade."
+  }
+ ]
+},
+
+{
+ title:"O CÓDIGO VIOLADO",
+ desc:"O departamento de RH recebeu denúncias de assédio moral e discriminação. O gerente pediu que os registros fossem apagados para preservar a imagem da empresa. O responsável administrativo está diante de uma escolha.",
+ character:"🕵️",
+ name:"RENATO — ANALISTA DE RH",
+ role:"MENSAGEM CRIPTOGRAFADA",
+ speech:"Tenho provas de que os funcionários foram humilhados. O gerente me mandou apagar tudo. Disse que minha carreira acabaria se eu não obedecesse.",
+ clue:"ARQUIVO 04: Mensagens comprovam que o gestor ordenou a exclusão de registros e ameaçou funcionários que denunciaram o assédio.",
+ questions:[
+  {
+   q:"Qual é a resolução que aprovou o Código de Ética e Disciplina dos Profissionais de Administração vigente?",
+   options:[
+    "A) RN CFA nº 537/2018.",
+    "B) RN CFA nº 640/2024.",
+    "C) RN CFA nº 671/2025.",
+    "D) Lei nº 10.098/2000."
+   ],
+   answer:2,
+   explain:"A RN CFA nº 671/2025 aprovou o código vigente e revogou a RN nº 640/2024."
+  },
+  {
+   q:"Qual destas condutas é incompatível com a ética profissional?",
+   options:[
+    "A) Praticar assédio moral ou sexual no exercício profissional.",
+    "B) Participar de treinamentos.",
+    "C) Propor melhorias administrativas.",
+    "D) Buscar aperfeiçoamento profissional."
+   ],
+   answer:0,
+   explain:"O Código de Ética disciplina deveres e infrações profissionais, incluindo condutas de assédio."
+  },
+  {
+   q:"Um gestor solicita que um profissional assine um relatório que não elaborou nem supervisionou. Qual é a conduta adequada?",
+   options:[
+    "A) Assinar para evitar conflitos.",
+    "B) Assinar e depois pedir desculpas.",
+    "C) Recusar-se a assumir autoria ou responsabilidade técnica indevida e buscar os canais adequados.",
+    "D) Apagar o relatório."
+   ],
+   answer:2,
+   explain:"O profissional deve agir com responsabilidade, honestidade e respeito aos deveres previstos no Código de Ética."
+  }
+ ]
+},
+
+{
+ title:"O ARQUIVO SECRETO",
+ desc:"As peças do quebra-cabeça foram reunidas. A auditoria descobriu que a diretoria conhecia os problemas e tentou esconder os fatos antes da premiação. A equipe precisa elaborar um veredito.",
+ character:"👩‍⚖️",
+ name:"HELENA — AUDITORA INDEPENDENTE",
+ role:"ÚLTIMO DEPOIMENTO",
+ speech:"Vocês têm os documentos. Têm os depoimentos. Mas a verdade não é apenas apontar culpados. Uma boa investigação precisa apresentar soluções.",
+ clue:"ARQUIVO FINAL: Foram encontrados relatórios de acessibilidade ignorados, registros de denúncias apagados e estudos de impacto social omitidos.",
+ questions:[
+  {
+   q:"Qual princípio deve orientar a atuação de um profissional de Administração diante de uma ordem antiética?",
+   options:[
+    "A) Obediência irrestrita à hierarquia.",
+    "B) Zelo, honestidade, responsabilidade, independência técnica e respeito à legislação.",
+    "C) Proteção da imagem da empresa a qualquer custo.",
+    "D) Prioridade absoluta aos interesses financeiros dos superiores."
+   ],
+   answer:1,
+   explain:"A RN CFA nº 671/2025 estabelece deveres éticos e responsabilidades profissionais."
+  },
+  {
+   q:"Qual seria uma resposta institucional responsável ao escândalo?",
+   options:[
+    "A) Apagar as provas restantes.",
+    "B) Culpar funcionários sem investigação.",
+    "C) Preservar evidências, apurar os fatos, proteger denunciantes, corrigir irregularidades e adotar medidas preventivas.",
+    "D) Publicar uma propaganda de responsabilidade social sem mudar as práticas."
+   ],
+   answer:2,
+   explain:"Uma resposta responsável exige apuração, transparência, proteção de direitos e correção efetiva."
+  },
+  {
+   q:"VEREDITO FINAL: A empresa merece receber o prêmio de responsabilidade social? Apresentem três medidas concretas que deveriam ser adotadas para reparar os danos e evitar que o caso se repita.",
+   open:true,
+   explain:"A equipe deve fundamentar seu veredito com evidências, ética administrativa, inclusão, acessibilidade e responsabilidade social."
+  }
+ ]
+}
+
+];
+
+
+/* ==================================
+   CONTROLE DO JOGO
+================================== */
+
+let phase=0;
+let question=0;
+let score=0;
+let hints=0;
+let hintsThisPhase=0;
+let answered=false;
+let teamName="";
+let phaseScores=[0,0,0,0,0];
+let openAnswers=[];
+
+function showScreen(id){
+ document.querySelectorAll(".screen").forEach(s=>{
+  s.classList.remove("active");
+ });
+ document.getElementById(id).classList.add("active");
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function startGame(){
+ teamName=document.getElementById("team").value.trim();
+
+ if(!teamName){
+  alert("Identifique sua equipe antes de iniciar!");
+  return;
+ }
+
+ document.getElementById("teamLabel").textContent="EQUIPE: "+teamName;
+ showScreen("game");
+ renderPhase();
+}
+
+function renderPhase(){
+ let p=phases[phase];
+
+ question=0;
+ hintsThisPhase=0;
+ answered=false;
+
+ document.getElementById("phaseLabel").textContent=
+  `FASE ${phase+1}/5`;
+
+ document.getElementById("currentPhase").textContent=phase+1;
+
+ document.getElementById("phaseEyebrow").textContent=
+  `INVESTIGAÇÃO 0${phase+1} // DOCUMENTO CLASSIFICADO`;
+
+ document.getElementById("phaseTitle").textContent=p.title;
+ document.getElementById("phaseDescription").textContent=p.desc;
+
+ document.getElementById("characterArea").innerHTML=`
+  <div class="character">
+   <div class="avatar">${p.character}</div>
+   <div>
+    <div class="tag">${p.role}</div>
+    <b>${p.name}</b>
+    <p>"${p.speech}"</p>
+   </div>
+  </div>
+ `;
+
+ document.getElementById("clueArea").textContent=p.clue;
+ document.getElementById("clueArea").classList.add("hidden");
+ document.getElementById("feedback").classList.add("hidden");
+
+ renderQuestion();
+ updateScore();
+}
+
+function renderQuestion(){
+ let p=phases[phase];
+ let q=p.questions[question];
+
+ answered=false;
+
+ document.getElementById("currentQuestion").textContent=question+1;
+
+ let area=document.getElementById("questionArea");
+
+ let html=`
+  <div class="eyebrow">INTERROGATÓRIO ${question+1}/3</div>
+  <h3>${q.q}</h3>
+ `;
+
+ if(q.open){
+  html+=`
+   <textarea id="openAnswer"
+    placeholder="Registrem a decisão da equipe e sua justificativa..."></textarea>
+   <button class="btn green" onclick="submitOpen()">
+    REGISTRAR DECISÃO
+   </button>
+  `;
+ }else{
+  q.options.forEach((opt,i)=>{
+   html+=`
+    <button class="option" id="opt${i}" onclick="answer(${i})">
+     ${opt}
+    </button>
+   `;
+  });
+ }
+
+ area.innerHTML=html;
+
+ document.getElementById("actions").innerHTML=`
+  <button class="btn secondary" onclick="showHint()">
+   💡 SOLICITAR DICA (-10)
+  </button>
+  <button class="btn secondary" onclick="showClue()">
+   📁 ABRIR EVIDÊNCIA
+  </button>
+ `;
+}
+
+function answer(choice){
+ if(answered)return;
+
+ answered=true;
+
+ let q=phases[phase].questions[question];
+ let correct=choice===q.answer;
+
+ if(correct){
+  score+=20;
+  phaseScores[phase]+=20;
+  document.getElementById("opt"+choice).classList.add("correct");
+ }else{
+  document.getElementById("opt"+choice).classList.add("wrong");
+  document.getElementById("opt"+q.answer).classList.add("correct");
+ }
+
+ let f=document.getElementById("feedback");
+
+ f.className="feedback "+(correct?"good":"bad");
+
+ f.innerHTML=
+  (correct
+   ?"<b>✓ EVIDÊNCIA CONFIRMADA! +20 PONTOS</b>"
+   :"<b>✕ HIPÓTESE INCORRETA. +0 PONTOS</b>")
+  +"<br>"+q.explain;
+
+ updateScore();
+
+ if(Math.random()<0.35){
+  scare();
+ }
+
+ nextButton();
+}
+
+function submitOpen(){
+ let field=document.getElementById("openAnswer");
+ let val=field.value.trim();
+
+ if(val.length<20){
+  alert("A equipe precisa justificar melhor sua decisão. Escreva pelo menos 20 caracteres.");
+  return;
+ }
+
+ if(answered)return;
+
+ answered=true;
+
+ score+=20;
+ phaseScores[phase]+=20;
+
+ openAnswers.push({
+  phase:phase+1,
+  question:question+1,
+  answer:val
+ });
+
+ let f=document.getElementById("feedback");
+ f.className="feedback good";
+
+ f.innerHTML=`
+  <b>✓ DEPOIMENTO REGISTRADO! +20 PONTOS</b><br>
+  ${phases[phase].questions[question].explain}
+  <br><br>
+  <i>A professora poderá avaliar a qualidade da argumentação posteriormente.</i>
+ `;
+
+ updateScore();
+ nextButton();
+}
+
+function nextButton(){
+ document.getElementById("actions").innerHTML=`
+  <button class="btn gold" onclick="nextQuestion()">
+   CONTINUAR INVESTIGAÇÃO →
+  </button>
+ `;
+}
+
+function nextQuestion(){
+ if(question<phases[phase].questions.length-1){
+  question++;
+  renderQuestion();
+ }else{
+  if(phase<4){
+   phase++;
+
+   if(phase===2||phase===4){
+    scare();
+   }
+
+   renderPhase();
+  }else{
+   finishGame();
+  }
+ }
+}
+
+function showHint(){
+ if(answered)return;
+
+ if(hintsThisPhase>=1){
+  alert("A equipe já utilizou a dica desta fase.");
+  return;
+ }
+
+ hints++;
+ hintsThisPhase++;
+
+ score=Math.max(0,score-10);
+ phaseScores[phase]-=10;
+
+ updateScore();
+
+ let tips=[
+  "Pense na diferença entre consequências e princípios morais.",
+  "A legislação brasileira considera diversas barreiras, não apenas as físicas.",
+  "Investigue quem se beneficia da valorização e quem suporta seus custos.",
+  "Consulte os deveres e as infrações do Código de Ética vigente.",
+  "Uma decisão responsável exige apuração, transparência e reparação."
+ ];
+
+ let f=document.getElementById("feedback");
+
+ f.className="feedback good";
+ f.innerHTML=`
+  <b>💡 DICA CONFIDENCIAL (-10 PONTOS)</b><br>
+  ${tips[phase]}
+ `;
+}
+
+function showClue(){
+ let el=document.getElementById("clueArea");
+ el.classList.toggle("hidden");
+}
+
+function updateScore(){
+ document.getElementById("score").textContent=score;
+
+ document.getElementById("progressBar").style.width=
+  ((phase+1)/5*100)+"%";
+
+ document.getElementById("hintCount").textContent=hints;
+}
+
+
+/* ==================================
+   EFEITOS DE SUSPENSE
+================================== */
+
+function scare(){
+ let titles=[
+  "ARQUIVO CORROMPIDO.",
+  "VOCÊS FORAM OBSERVADOS.",
+  "ALGUÉM ESTÁ APAGANDO AS PROVAS.",
+  "NÃO CONFIEM EM TODOS OS DEPOIMENTOS.",
+  "A DIRETORIA SABE QUE VOCÊS ESTÃO AQUI."
+ ];
+
+ let texts=[
+  "Uma mensagem desconhecida foi encontrada.",
+  "O sistema detectou uma tentativa de acesso.",
+  "Um documento acaba de desaparecer.",
+  "Uma testemunha mudou seu depoimento.",
+  "Um novo arquivo acaba de ser desbloqueado."
+ ];
+
+ document.body.classList.add("shake");
+
+ document.getElementById("flashTitle").textContent=
+  titles[Math.floor(Math.random()*titles.length)];
+
+ document.getElementById("flashText").textContent=
+  texts[Math.floor(Math.random()*texts.length)];
+
+ document.getElementById("flash").classList.add("show");
+
+ setTimeout(()=>{
+  document.body.classList.remove("shake");
+ },600);
+}
+
+function closeFlash(){
+ document.getElementById("flash").classList.remove("show");
+}
+
+
+/* ==================================
+   ENCERRAMENTO
+================================== */
+
+function finishGame(){
+
+ document.getElementById("finalScore").textContent=
+  score+" PONTOS";
+
+ document.getElementById("finalMessage").textContent=
+  score>=250
+  ?"A equipe reuniu evidências importantes e demonstrou capacidade investigativa!"
+  :"A investigação foi concluída. Revisem as evidências e fortaleçam os argumentos no podcast.";
+
+ document.getElementById("ending").innerHTML=`
+  EQUIPE: ${escapeHTML(teamName)}<br>
+  O caso revelou problemas de gestão, acessibilidade,
+  inclusão e ética. Agora é hora de apresentar a verdade.
+ `;
+
+ document.getElementById("podTeam").value=teamName;
+
+ document.getElementById("certificateTeam").textContent=teamName;
+ document.getElementById("certificateScore").textContent=
+  "PONTUAÇÃO: "+score;
+
+ showScreen("result");
+}
+
+
+/* ==================================
+   ROTEIRO DO PODCAST
+================================== */
+
+function getScript(){
+
+ const fields=[
+  ["PARTICIPANTES","podMembers"],
+  ["TÍTULO DO EPISÓDIO","podTitle"],
+  ["ABERTURA","podIntro"],
+  ["EVIDÊNCIAS","podEvidence"],
+  ["DEBATE E ANÁLISE","podDebate"],
+  ["FUNDAMENTAÇÃO LEGAL","podLaws"],
+  ["VEREDITO","podVerdict"],
+  ["ENCERRAMENTO","podEnd"]
+ ];
+
+ let content=
+  "OPERAÇÃO CÓDIGO DE SILÊNCIO\n"+
+  "ROTEIRO DE PODCAST\n"+
+  "MESTRE DO JOGO: PROFª BÁRBARA\n"+
+  "EQUIPE: "+teamName+"\n"+
+  "PONTUAÇÃO DA INVESTIGAÇÃO: "+score+"\n\n";
+
+ fields.forEach(([label,id])=>{
+  let value=document.getElementById(id).value.trim();
+
+  content+=label+":\n";
+  content+=(value||"Não preenchido")+"\n\n";
+ });
+
+ content+="\nDESAFIOS ABERTOS REGISTRADOS:\n\n";
+
+ openAnswers.forEach(item=>{
+  content+=`FASE ${item.phase} - DESAFIO ${item.question}\n`;
+  content+=item.answer+"\n\n";
+ });
+
+ content+="\nOPERAÇÃO CÓDIGO DE SILÊNCIO\n";
+ content+="TÉCNICO EM ADMINISTRAÇÃO MODULAR\n";
+ content+="PROFª BÁRBARA\n";
+
+ return content;
+}
+
+function downloadScript(){
+
+ let content=getScript();
+
+ let blob=new Blob(["\ufeff"+content],{
+  type:"text/plain;charset=utf-8"
+ });
+
+ let url=URL.createObjectURL(blob);
+
+ let a=document.createElement("a");
+ a.href=url;
+ a.download="Roteiro_Podcast_Codigo_de_Silencio.txt";
+
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+
+ URL.revokeObjectURL(url);
+}
+
+function printScript(){
+ window.print();
+}
+
+
+/* ==================================
+   SEGURANÇA DE TEXTO
+================================== */
+
+function escapeHTML(text){
+ return String(text).replace(/[&<>"']/g,function(char){
+  return {
+   "&":"&amp;",
+   "<":"&lt;",
+   ">":"&gt;",
+   '"':"&quot;",
+   "'":"&#039;"
+  }[char];
+ });
+}
+
+</script>
+
+</body>
+</html>
